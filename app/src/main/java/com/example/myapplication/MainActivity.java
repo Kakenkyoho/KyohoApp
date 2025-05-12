@@ -22,7 +22,7 @@ import android.widget.Toast;
 import com.example.myapplication.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
-
+    //testpush
     // Used to load the 'myapplication' library on application startup.
     static {
         System.loadLibrary("myapplication");
