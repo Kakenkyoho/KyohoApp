@@ -44,12 +44,12 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        /*binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         // Example of a call to a native method
         TextView tv = binding.sampleText;
-        tv.setText(stringFromJNI());
+        tv.setText(stringFromJNI());*/
         if(!checkPermissions()){
             requestPermissions();
         }
@@ -60,6 +60,13 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(MainActivity.this, DeviceList.class);
             startActivity(intent);
         });
+
+        Button butt=findViewById(R.id.debug);
+        butt.setOnClickListener(v ->{
+            Intent intent = new Intent(MainActivity.this, Connection.class);
+            startActivity(intent);
+        });
+
 
 
     }

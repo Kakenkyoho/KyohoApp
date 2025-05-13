@@ -33,15 +33,6 @@ public class Connection extends AppCompatActivity {
 
         Button button = findViewById(R.id.button3);
         button.setOnClickListener(v -> {
-            //Intent intent = new Intent(MainActivity.this, DeviceList.class);
-            //startActivity(intent);
-            // 安全に追記
-            /*try (FileOutputStream fos = new FileOutputStream(DeviceList.sharefile, true)) {
-                fos.write("-999".getBytes());
-                fos.write(",".getBytes()); // 区切り文字が必要な場合
-            } catch (IOException e) {
-                e.printStackTrace();
-            }*/
             DeviceList.sendData("start");
             DeviceList.savefiles(getApplicationContext(),"-999");
 
