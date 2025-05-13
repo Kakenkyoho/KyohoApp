@@ -194,6 +194,9 @@ public class DeviceList extends AppCompatActivity {
         }
     }
     public String receiveData() {
+        if(!_isConnected){
+            return null;
+        }
         try {
             return reader.readLine();
         } catch (IOException e) {
@@ -225,6 +228,9 @@ public class DeviceList extends AppCompatActivity {
 
     // データを送信する
     public static void sendData(String data) {
+        if(!_isConnected){
+            return;
+        }
         try {
             OutputStream outputStream = socket.getOutputStream();
             outputStream.write((data + "\n").getBytes()); // ESP32側が改行でデータを読み取る場合
@@ -285,33 +291,41 @@ public class DeviceList extends AppCompatActivity {
         return null;
 
     }
-        public static void savefiles(Context context,String data){
-            String fileName = "recei2ved_data.txt";
-            Uri uri = getExistingFileUri(context ,fileName);
+    public static void savefiles(Context context,String data){
+        String fileName = "data.txt";
+        Uri uri = getExistingFileUri(context ,fileName);
 
 
-            if (uri == null) {
+        if (uri == null) {
                 // ファイルが存在しないなら新規作成
-                ContentValues values = new ContentValues();
-                values.put(MediaStore.Files.FileColumns.DISPLAY_NAME, fileName);
-                values.put(MediaStore.Files.FileColumns.MIME_TYPE, "text/plain");
-                values.put(MediaStore.Files.FileColumns.RELATIVE_PATH, Environment.DIRECTORY_DOCUMENTS);
-                uri = context.getContentResolver().insert(MediaStore.Files.getContentUri("external"), values);
-            }
-
-            if (uri != null) {
-                try (OutputStream os = context.getContentResolver().openOutputStream(uri, "wa")) {
-                    if (os != null) {
-                        os.write((data + "\n").getBytes());
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
+            ContentValues values = new ContentValues();
+            values.put(MediaStore.Files.FileColumns.DISPLAY_NAME, fileName);
+            values.put(MediaStore.Files.FileColumns.MIME_TYPE, "text/plain");
+            values.put(MediaStore.Files.FileColumns.RELATIVE_PATH, Environment.DIRECTORY_DOCUMENTS);
+            uri = context.getContentResolver().insert(MediaStore.Files.getContentUri("external"), values);
         }
 
-
+        if (uri != null) {
+            try (OutputStream os = context.getContentResolver().openOutputStream(uri, "wa")) {
+                if (os != null) {
+                    os.write((data + "\n").getBytes());
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
+
+
+    public static void clearFile(Context context, String fileName) {
+        Uri uri = getExistingFileUri(context, fileName);
+        if (uri != null) {
+            // ファイル削除
+            context.getContentResolver().delete(uri, null, null);
+        }
+    }
+}
+
 
 
 
