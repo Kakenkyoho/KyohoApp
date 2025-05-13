@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
     static {
         System.loadLibrary("myapplication");
     }
-
+/// aasdasd
     private ActivityMainBinding binding;
     private BluetoothAdapter bluetoothAdapter;
 
@@ -44,12 +44,12 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-        /*binding = ActivityMainBinding.inflate(getLayoutInflater());
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         // Example of a call to a native method
         TextView tv = binding.sampleText;
-        tv.setText(stringFromJNI());*/
+        tv.setText(stringFromJNI());
         if(!checkPermissions()){
             requestPermissions();
         }
@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        Button butt=findViewById(R.id.debug);
+        Button butt=findViewById(R.id.button7);
         butt.setOnClickListener(v ->{
             Intent intent = new Intent(MainActivity.this, Connection.class);
             startActivity(intent);
