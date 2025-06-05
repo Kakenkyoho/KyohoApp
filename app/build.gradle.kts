@@ -41,10 +41,11 @@ android {
 }
 
 dependencies {
-
+    implementation(libs.mpandroidchart)
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.constraintlayout)
+    //implementation(libs.activity)
     //implementation(libs.activity)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)

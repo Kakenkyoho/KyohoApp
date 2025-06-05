@@ -1,17 +1,14 @@
 package com.example.myapplication;
 
+import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 import android.widget.Button;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
-
-import java.io.FileOutputStream;
-import java.io.IOException;
 
 public class Connection extends AppCompatActivity {
 
@@ -25,7 +22,7 @@ public class Connection extends AppCompatActivity {
 
         Button startbutton = findViewById(R.id.start);
         startbutton.setOnClickListener(v -> {
-            DeviceList.sendData("start");
+            DeviceList.sendData("start;");
         });
 
         Button button99 = findViewById(R.id.button3);
@@ -35,7 +32,7 @@ public class Connection extends AppCompatActivity {
         });
         Button stopbutton = findViewById(R.id.stop);
         stopbutton.setOnClickListener(v -> {
-            DeviceList.sendData("stop");
+            DeviceList.sendData("stop;");
         });
 
         Button initbutton = findViewById(R.id.initialize);
@@ -52,5 +49,22 @@ public class Connection extends AppCompatActivity {
 
         });
 
+        Button bibe = findViewById(R.id.bibes);
+        bibe.setOnClickListener(v -> {
+            DeviceList.sendData("stop;");
+            vibrateDevice(getApplicationContext());
+        });
+
+    }
+    public static void vibrateDevice(Context context) {
+        Vibrator vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
+        if (vibrator != null && vibrator.hasVibrator()) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                // 1秒間（1000ミリ秒）、振動の強さデフォルト
+                vibrator.vibrate(VibrationEffect.createOneShot(1000, VibrationEffect.DEFAULT_AMPLITUDE));
+            } else {
+                vibrator.vibrate(1000); // 非推奨（API < 26向け）
+            }
+        }
     }
 }

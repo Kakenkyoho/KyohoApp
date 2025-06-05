@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
     //testpush
     // Used to load the 'myapplication' library on application startup.
     static {
-        System.loadLibrary("myapplication");
+        System.loadLibrary("kyoho");
     }
 /// aasdasd
     private ActivityMainBinding binding;
@@ -64,6 +64,12 @@ public class MainActivity extends AppCompatActivity {
         Button butt=findViewById(R.id.button7);
         butt.setOnClickListener(v ->{
             Intent intent = new Intent(MainActivity.this, Connection.class);
+            startActivity(intent);
+        });
+
+        Button butt2=findViewById(R.id.button5);
+        butt2.setOnClickListener(v ->{
+            Intent intent = new Intent(MainActivity.this, GraphView.class);
             startActivity(intent);
         });
 

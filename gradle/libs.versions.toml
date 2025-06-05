@@ -7,8 +7,10 @@ appcompat = "1.7.0"
 material = "1.12.0"
 constraintlayout = "2.2.1"
 activity = "1.10.1"
-
+mpandroidchart = "v3.1.0"
 [libraries]
+
+
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
@@ -16,7 +18,7 @@ appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "a
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
-
+mpandroidchart = { group = "com.github.PhilJay", name = "mpandroidChart", version.ref = "mpandroidchart" }
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 

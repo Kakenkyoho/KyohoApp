@@ -60,7 +60,7 @@ public class DeviceList extends AppCompatActivity {
     private Set<BluetoothDevice> pairedDevices;
     private Map<String, BluetoothDevice> bondedDeviceMap = new HashMap<>();
     private static boolean  _isConnected = false;
-    private BufferedReader reader;
+    private static BufferedReader reader;
     private static BluetoothSocket socket;
     public static File sharefile;
 
@@ -193,7 +193,7 @@ public class DeviceList extends AppCompatActivity {
             _isConnected = false;
         }
     }
-    public String receiveData() {
+    public static String receiveData() {
         if(!_isConnected){
             return null;
         }
@@ -271,29 +271,32 @@ public class DeviceList extends AppCompatActivity {
             fos.write(content.getBytes());
         }
     }
-    private static Uri getExistingFileUri(Context context,String fileName) {
+    public static Uri getExistingFileUri(Context context, String fileName) {
         ContentResolver resolver = context.getContentResolver();
         Uri collection = MediaStore.Files.getContentUri("external");
 
-        String selection = MediaStore.MediaColumns.DISPLAY_NAME + "=? AND " +
-                MediaStore.MediaColumns.RELATIVE_PATH + "=?";
-        String[] selectionArgs = new String[]{
-                fileName,
-                Environment.DIRECTORY_DOCUMENTS + "/"
-        };
+        // RELATIVE_PATH 条件を外して DISPLAY_NAME のみにする
+        String selection = MediaStore.MediaColumns.DISPLAY_NAME + "=?";
+        String[] selectionArgs = new String[]{fileName};
 
-        try (Cursor cursor = resolver.query(collection, new String[]{MediaStore.MediaColumns._ID}, selection, selectionArgs, null)) {
+        try (Cursor cursor = resolver.query(collection,
+                new String[]{MediaStore.MediaColumns._ID},
+                selection,
+                selectionArgs,
+                null)) {
             if (cursor != null && cursor.moveToFirst()) {
                 long id = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.MediaColumns._ID));
                 return ContentUris.withAppendedId(collection, id);
             }
         }
         return null;
-
     }
+
+
     public static void savefiles(Context context,String data){
-        String fileName = "data.txt";
+        String fileName = "data4.txt";
         Uri uri = getExistingFileUri(context ,fileName);
+
 
 
         if (uri == null) {
@@ -315,6 +318,8 @@ public class DeviceList extends AppCompatActivity {
             }
         }
     }
+
+
 
 
     public static void clearFile(Context context, String fileName) {
