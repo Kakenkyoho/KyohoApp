@@ -171,6 +171,7 @@ public class DeviceList extends AppCompatActivity {
                         Log.d(TAGS, "Received: " + data);
                         //saveToFile(data);
                         savefiles(getApplicationContext(),data);
+                        //GraphView.setData(data);
 
                         //writeFile(sharefile, data);
                     }

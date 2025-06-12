@@ -13,12 +13,14 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Description;
+import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
+import com.github.mikephil.charting.utils.ColorTemplate;
 
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
@@ -35,6 +37,11 @@ import java.util.List;
 
 public class GraphView extends AppCompatActivity {
     private LineChart mChart;
+    public float data1;
+    public float data2;
+    public float data3;
+    public float data4;
+    private LineDataSet[] dataSets = new LineDataSet[4];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,154 +56,90 @@ public class GraphView extends AppCompatActivity {
 
 
 
+        setupChart();
 
-            mChart = findViewById(R.id.lineChart);
 
-            // Grid背景色
-            mChart.setDrawGridBackground(true);
+        }
 
+
+    private void setupChart() {
             // no description text
-            mChart.getDescription().setEnabled(true);
 
-            // Grid縦軸を破線
-            XAxis xAxis = mChart.getXAxis();
-            xAxis.enableGridDashedLine(10f, 10f, 0f);
-            xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+            mChart.setTouchEnabled(true);
+
+            // enable scaling and dragging
+            mChart.setDragEnabled(true);
+            mChart.setScaleEnabled(true);
+            mChart.setDrawGridBackground(false);
+
+            // if disabled, scaling can be done on x- and y-axis separately
+            mChart.setPinchZoom(true);
+
+            // set an alternative background color
+            mChart.setBackgroundColor(Color.LTGRAY);
+
+            LineData data = new LineData();
+            data.setValueTextColor(Color.BLACK);
+
+            // add empty data
+            mChart.setData(data);
+
+            //  ラインの凡例の設定
+            Legend l = mChart.getLegend();
+            l.setForm(Legend.LegendForm.LINE);
+            l.setTextColor(Color.BLACK);
+
+            XAxis xl = mChart.getXAxis();
+            xl.setTextColor(Color.BLACK);
+            //xl.setLabelsToSkip(9);
 
             YAxis leftAxis = mChart.getAxisLeft();
-            // Y軸最大最小設定
-            leftAxis.setAxisMaximum(150f);
-            leftAxis.setAxisMinimum(0f);
-            // Grid横軸を破線
-            leftAxis.enableGridDashedLine(10f, 10f, 0f);
-            leftAxis.setDrawZeroLine(true);
+            leftAxis.setTextColor(Color.BLACK);
+            leftAxis.setAxisMaxValue(3.0f);
+            leftAxis.setAxisMinValue(-3.0f);
+            leftAxis.setStartAtZero(false);
+            leftAxis.setDrawGridLines(true);
 
-            // 右側の目盛り
-            mChart.getAxisRight().setEnabled(false);
+            YAxis rightAxis = mChart.getAxisRight();
+            rightAxis.setEnabled(false);
 
-            // add data
-        try {
-            setData(getApplicationContext());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+
+        ///LineData data = new LineData();
+        for (int i = 0; i < 4; i++) {
+            dataSets[i] = new LineDataSet(new ArrayList<>(), "Data " + (i + 1));
+            dataSets[i].setColor(ColorTemplate.COLORFUL_COLORS[i]);
+            data.addDataSet(dataSets[i]);
         }
+        mChart.setData(data);
+    }
 
-        mChart.animateX(2500);
-            //mChart.invalidate();
+    private void addEntryToChart(float d1, float d2, float d3, float d4) {
+        LineData data = mChart.getData();
+        int xIndex = dataSets[0].getEntryCount();
+        data.addEntry(new Entry(xIndex, d1), 0);
+        data.addEntry(new Entry(xIndex, d2), 1);
+        data.addEntry(new Entry(xIndex, d3), 2);
+        data.addEntry(new Entry(xIndex, d4), 3);
 
-            // don't forget to refresh the drawing
-            // mChart.invalidate();
-        }
+        data.notifyDataChanged();
+        mChart.notifyDataSetChanged();
+        mChart.invalidate();
+    }
+    public void setData(String rawData){
+            String[] parts = rawData.split(",");
+            if (parts.length == 4) {
+                try {
+                    data1 = Float.parseFloat(parts[0]);
+                    data2 = Float.parseFloat(parts[1]);
+                    data3 = Float.parseFloat(parts[2]);
+                    data4 = Float.parseFloat(parts[3]);
 
-        private void setData(Context context) throws IOException {
-            // Entry()を使ってLineDataSetに設定できる形に変更してarrayを新しく作成
-            Uri uri = DeviceList.getExistingFileUri(context, "data.txt");
-            if (uri == null) {
-                ContentValues values = new ContentValues();
-                values.put(MediaStore.Files.FileColumns.DISPLAY_NAME, "data.txt");
-                values.put(MediaStore.Files.FileColumns.MIME_TYPE, "text/plain");
-                values.put(MediaStore.Files.FileColumns.RELATIVE_PATH, Environment.DIRECTORY_DOCUMENTS);
-                uri = context.getContentResolver().insert(MediaStore.Files.getContentUri("external"), values);
-            }
+                    addEntryToChart(data1, data2, data3, data4);
 
-            if (uri == null) return; // 取得できなかった場合は終了
-
-
-            String line;
-            int index = 0;
-
-            List<Double> x1List = new ArrayList<>();
-            List<Double> y1List = new ArrayList<>();
-            List<Double> x2List = new ArrayList<>();
-            List<Double> y2List = new ArrayList<>();
-
-            //String[] lines = rawData.strip().split("\n");
-
-            ArrayList<Entry> values = new ArrayList<>();
-            ArrayList<Entry> values2 = new ArrayList<>();
-            try (InputStream is = context.getContentResolver().openInputStream(uri);
-                 BufferedReader reader = new BufferedReader(new InputStreamReader(is))) {
-
-                Log.d("aaaaa","sss");
-                while ((line = reader.readLine()) != null) {
-                    String[] parts = line.split(",");
-                    if (parts.length == 4) {
-                        float y1 = Float.parseFloat(parts[1]);
-                        float y2 = Float.parseFloat(parts[3]);
-                        values.add(new Entry(index, y1));
-                        values2.add(new Entry(index, y2));
-                        index++;
-                    }
+                } catch (NumberFormatException e) {
+                    e.printStackTrace();
                 }
-
-            } catch (IOException e) {
-                e.printStackTrace();
             }
-
-
-
-
-            /*for (int i = 0; i < data.length; i++) {
-                values.add(new Entry(i, data[i], null, null));
-            }*/
-
-            LineDataSet dataSet1 = new LineDataSet(values, "Y1");
-            dataSet1.setColor(Color.RED);
-            dataSet1.setCircleRadius(3f);
-            dataSet1.setLineWidth(2f);
-
-            LineDataSet dataSet2 = new LineDataSet(values2, "Y2");
-            dataSet2.setColor(Color.BLUE);
-            dataSet2.setCircleRadius(3f);
-            dataSet2.setLineWidth(2f);
-
-            LineData lineData = new LineData(dataSet1, dataSet2);
-            mChart.setData(lineData);
-
-            Description desc = new Description();
-            desc.setText("Y1とY2の折れ線グラフ");
-            mChart.setDescription(desc);
-
-            mChart.invalidate(); // グラフ再描画
-
-
-
-            /*if (mChart.getData() != null &&
-                    mChart.getData().getDataSetCount() > 0) {
-
-                set1 = (LineDataSet) mChart.getData().getDataSetByIndex(0);
-                set1.setValues(values);
-                mChart.getData().notifyDataChanged();
-                mChart.notifyDataSetChanged();
-
-            } else {
-                // create a dataset and give it a type
-                set1 = new LineDataSet(values, "DataSet");
-
-                set1.setDrawIcons(false);
-                set1.setColor(Color.BLACK);
-                set1.setCircleColor(Color.BLACK);
-                set1.setLineWidth(1f);
-                set1.setCircleRadius(3f);
-                set1.setDrawCircleHole(false);
-                set1.setValueTextSize(0f);
-                set1.setDrawFilled(true);
-                set1.setFormLineWidth(1f);
-                set1.setFormLineDashEffect(new DashPathEffect(new float[]{10f, 5f}, 0f));
-                set1.setFormSize(15.f);
-
-                set1.setFillColor(Color.BLUE);
-
-                ArrayList<ILineDataSet> dataSets = new ArrayList<>();
-                dataSets.add(set1); // add the datasets
-
-                // create a data object with the datasets
-                LineData lineData = new LineData(dataSets);
-
-                // set data
-                mChart.setData(lineData);
-            }*/
-
         }
     }
 
