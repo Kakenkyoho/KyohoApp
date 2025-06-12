@@ -62,6 +62,7 @@ public class GraphView extends AppCompatActivity {
         }
 
 
+
     private void setupChart() {
             // no description text
 
@@ -104,25 +105,29 @@ public class GraphView extends AppCompatActivity {
             rightAxis.setEnabled(false);
 
 
-        ///LineData data = new LineData();
-        for (int i = 0; i < 4; i++) {
-            dataSets[i] = new LineDataSet(new ArrayList<>(), "Data " + (i + 1));
-            dataSets[i].setColor(ColorTemplate.COLORFUL_COLORS[i]);
-            data.addDataSet(dataSets[i]);
-        }
+
         mChart.setData(data);
     }
 
     private void addEntryToChart(float d1, float d2, float d3, float d4) {
         LineData data = mChart.getData();
-        int xIndex = dataSets[0].getEntryCount();
-        data.addEntry(new Entry(xIndex, d1), 0);
-        data.addEntry(new Entry(xIndex, d2), 1);
-        data.addEntry(new Entry(xIndex, d3), 2);
-        data.addEntry(new Entry(xIndex, d4), 3);
+        ILineDataSet set1 = data.getDataSetByIndex(0);
+        //2本目のグラフ（インデックスを1に）
+        ILineDataSet set2 = data.getDataSetByIndex(1);
+
+        ILineDataSet set3 = data.getDataSetByIndex(0);
+        //2本目のグラフ（インデックスを1に）
+        ILineDataSet set4 = data.getDataSetByIndex(1);
+
+        data.addEntry(new Entry(set1.getEntryCount(), d1), 0);
+        data.addEntry(new Entry(set2.getEntryCount(), d2), 1);
+        data.addEntry(new Entry(set3.getEntryCount(), d3), 2);
+        data.addEntry(new Entry(set4.getEntryCount(), d4), 3);
 
         data.notifyDataChanged();
         mChart.notifyDataSetChanged();
+        mChart.setVisibleXRangeMaximum(120);
+        mChart.moveViewToX(data.getEntryCount());
         mChart.invalidate();
     }
     public void setData(String rawData){
