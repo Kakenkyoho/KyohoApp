@@ -208,24 +208,6 @@ public class DeviceList extends AppCompatActivity {
     }
 
 
-    private void saveToFile(String data) {
-        ContentValues values = new ContentValues();
-        values.put(MediaStore.Files.FileColumns.DISPLAY_NAME, "received_data.txt");
-        values.put(MediaStore.Files.FileColumns.MIME_TYPE, "text/plain");
-        values.put(MediaStore.Files.FileColumns.RELATIVE_PATH, Environment.DIRECTORY_DOCUMENTS);
-
-        ContentResolver resolver = getContentResolver();
-        Uri uri = resolver.insert(MediaStore.Files.getContentUri("external"), values);
-
-        try (OutputStream os = resolver.openOutputStream(uri, "wa")) { // 'wa' is append mode
-            if (os != null) {
-                os.write((data + "\n").getBytes()); // Appending data with a newline
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
 
     // データを送信する
     public static void sendData(String data) {
