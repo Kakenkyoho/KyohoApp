@@ -1,0 +1,21 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_home"
+        android:icon="@drawable/ic_home"
+        android:title="ホーム" />
+
+    <item
+        android:id="@+id/nav_search"
+        android:icon="@drawable/ic_time"
+        android:title="タイマー" />
+    <item
+        android:id="@+id/nav_walk"
+        android:icon="@drawable/ic_walk"
+        android:title="歩数計"/>
+    <item
+        android:id="@+id/nav_setting"
+        android:icon="@drawable/ic_setting"
+        android:title="設定"/>
+
+
+</menu>
